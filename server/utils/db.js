@@ -353,9 +353,10 @@ exports.create_user = function(account,name,coins,gems,sex,headimg,callback){
     }
     name = crypto.toBase64(name);
     var userId = generateUserId();
-
-    var sql = 'INSERT INTO t_users(userid,account,name,coins,gems,sex,headimg) VALUES("{0}", "{1}","{2}",{3},{4},{5},{6})';
-    sql = sql.format(userId,account,name,coins,gems,sex,headimg);
+    var type = 0;
+    var state = 0;
+    var sql = 'INSERT INTO t_users(userid,account,name,coins,gems,sex,headimg,type,state) VALUES("{0}", "{1}","{2}",{3},{4},{5},{6},{7},{8})';
+    sql = sql.format(userId,account,name,coins,gems,sex,headimg,type, state);
     console.log(sql);
     query(sql, function(err, rows, fields) {
         if (err) {
@@ -744,6 +745,29 @@ exports.get_message = function(type,version,callback){
                 callback(null);
             }
         }
+    });
+};
+
+
+
+
+exports.get_all_robot_data = function(callback){
+    callback = callback == null? nop:callback;
+    var sql = 'SELECT userid,account,name,lv,exp,coins,gems,roomid FROM t_users where type = "1"';
+    query(sql, function(err, rows, fields) {
+        if (err) {
+            callback(null);
+            throw err;
+        }
+
+        if(rows.length == 0){
+            callback(null);
+            return;
+        }
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].name = crypto.fromBase64(rows[i].name);
+        }
+        callback(rows);
     });
 };
 

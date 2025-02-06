@@ -152,6 +152,8 @@ CREATE TABLE `t_users` (
   `gems` int(11) DEFAULT '0' COMMENT '用户宝石',
   `roomid` varchar(8) DEFAULT NULL,
   `history` varchar(4096) NOT NULL DEFAULT '',
+  `type` int(1) DEFAULT '0' COMMENT '用户类型',
+  `state` int(1) DEFAULT '0' COMMENT '用户状态',
   PRIMARY KEY (`userid`),
   UNIQUE KEY `account` (`account`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
@@ -159,7 +161,8 @@ CREATE TABLE `t_users` (
 -- ----------------------------
 -- Records of t_users
 -- ----------------------------
-INSERT INTO `t_users` VALUES ('9', 'guest_123456', '5aSP5L6v6LWM5L6g', '0', null, '1', '0', '1000', '21', '526035', '');
-INSERT INTO `t_users` VALUES ('10', 'guest_asdf1', '55qH55Sr56iz6LWi', '0', null, '1', '0', '1000', '21', '526035', '');
-INSERT INTO `t_users` VALUES ('11', 'guest_asdf2', '5Lic5pa56ZuA5Zyj', '0', null, '1', '0', '1000', '21', '526035', '');
-INSERT INTO `t_users` VALUES ('12', 'guest_asdf3', '5qyn6Ziz6Ieq5pG4', '0', null, '1', '0', '1000', '21', '526035', '');
+INSERT INTO `t_users` VALUES ('9', 'guest_123456', '5aSP5L6v6LWM5L6g', '0', null, '1', '0', '1000', '21', '526035', '', '0', '0');
+INSERT INTO `t_users` VALUES ('10', 'guest_asdf1', '55qH55Sr56iz6LWi', '0', null, '1', '0', '1000', '21', '526035', '', '0', '0');
+INSERT INTO `t_users` VALUES ('11', 'guest_asdf2', '5Lic5pa56ZuA5Zyj', '0', null, '1', '0', '1000', '21', '526035', '', '0', '0');
+INSERT INTO `t_users` VALUES ('12', 'guest_asdf3', '5qyn6Ziz6Ieq5pG4', '0', null, '1', '0', '1000', '21', '526035', '', '0', '0');
+
