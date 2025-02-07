@@ -88,7 +88,7 @@ function generateRandomRoleName() {
 app.use(express.static(path.join(__dirname, 'public')));
 
  
-app.get('/index.html', function (req, res) {
+app.get('/', function (req, res) {
    res.sendFile(__dirname + "/" + "index.html" );
 })
  
