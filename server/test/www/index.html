@@ -1,0 +1,22 @@
+在浏览器中访问以下url。支持所有平台，所有场次。支持移动、PC。
+
+添加机器人:
+	根据玩家id添加：      ai.oa.com/?platid=117&followuid=123456                //添加机器人到117平台，id为12345的玩家所在的房间
+	根据桌子id添加：      ai.oa.com/?platid=13&tid=56789                        //添加机器人到13平台，id为56789的桌子
+	根据svid并指定数量：  ai.oa.com/?platid=117&svid=1989&num=50                //添加50个机器人到svid为1989的server上
+	指定添加的机器人id：  ai.oa.com/?platid=13&followuid=123456&robotid=7890    //添加机器人跟随玩家123456，机器人的uid为7890
+
+删除机器人：
+	ai.oa.com/?platid=117&cmd=kick                      //删除117平台所有机器人
+	ai.oa.com/?platid=117&cmd=kick&followuid=123456     //删除117平台，跟随id为123456的所有机器人
+	ai.oa.com/?platid=117&cmd=kick&robotid=7890         //删除117平台，uid为7890的机器人
+
+高级选项
+	重置平台配置：(添加新桌子，添加新server，修改锦标赛开赛时间需要重置机器人)
+		ai.oa.com/?platid=117&cmd=reset                      //重读117平台配置
+	设置机器人AI：
+		ai.oa.com/?platid=117&followuid=123456&ai=always_allin  //添加的机器人会一直ALLIN，更多ai选项：always_fold  always_call 
+
+以上选项可以任意组合，选项包括：platid  followuid  tid  svid  seatid  num  robotid  cmd
+
+

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>新版德州机器人</title>
+    <style type="text/css">
+        div, ul, li, img, table, h1, h3, p, form {
+            margin: 0;
+            padding: 0;
+            float: none;
+            border: 0;
+            LIST-STYLE-TYPE: none;
+        }
+
+        body {
+            font-size: 12px;
+            margin: 0;
+            color: #4b4e47;
+            font-family: microsoft YaHei,Arial, Helvetica, sans-serif;
+            padding: 20px 0 0 20px;
+        }
+
+        a:link, a:visited {
+            color: #3d83f2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #fff;
+            background: #3d83f2;
+        }
+
+        #main {
+            width: 100%;
+            height: auto;
+            float: left;
+        }
+
+        #left {
+            width: 50%;
+            height: auto;
+            float: left;
+            text-align: left;
+        }
+
+        #right {
+            width: 50%;
+            height: auto;
+            float: right;
+            text-align: left;
+        }
+
+        h3 {
+            font-size: 16px;
+            height: 32px;
+            line-height: 32px;
+            width: 100%;
+            float: left;
+            display: block;
+        }
+
+        .red {
+            color: red;
+        }
+
+        #left form label {
+            height: 26px;
+            line-height: 26px;
+            width: auto;
+        }
+
+        #left form span {
+            text-align: right;
+            padding-right: 5px;
+            display: inline-block;
+        }
+
+        #left form p {
+            height: 32px;
+        }
+
+        #right li {
+            line-height: 22px;
+            float: left;
+            display: block;
+        }
+
+        #right .sptitle {
+            width: 80px;
+            text-align: right;
+            display: inline-block;
+            float: left;
+        }
+
+        #right .spcount {
+            width: auto;
+            text-align: left;
+            float: left;
+            padding-left: 5px;
+        }
+
+        span {
+            width: auto;
+            display: inline-block;
+            height: 22px;
+            line-height: 22px;
+        }
+
+        .tips {
+            width: 370px;
+            border: #C60 solid 1px;
+            background: #FAF0D3;
+            margin: 0 auto;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .ptitle {
+            width: 78px;
+            text-align: right;
+            line-height: 32px;
+        }
+
+        .bfont {
+            font-family: Georgia;
+            font-size: 26px;
+            color: green;
+            font-weight: bold;
+        }
+
+        .list {
+            width: 100%;
+            float: left;
+            display: block;
+            height: 40px;
+        }
+
+            .list ul {
+                display: inline;
+            }
+
+                .list ul li {
+                    width: 50px;
+                    padding: 5px;
+                    border: #ccc solid 1px;
+                    float: left;
+                    text-align: center;
+                    margin-left: 1px;
+                    display: block;
+                    cursor: pointer;
+                }
+
+                    .list ul li:hover, .choose {
+                        border: #ff9933 solid 1px;
+                        background: blanchedalmond;
+                        color: red;
+                        font-size: 16px;
+                        font-weight: bold;
+                    }
+    </style>
+    <script src="http://pkws93.17c.cn/js/jq.js?v20151203"></script>
+</head>
+<body>
+
+    <div id="main">
+        <h1>德州机器人</h1><br>
+
+        <div style="border-bottom:1px dashed #000000;"></div>
+        <div id="left">
+            <div id="add">
+                <h2>添加机器人</h2><br>
+                <p>
+                    <span class="ptitle">选择　平台：</span>&nbsp;
+                    <select name="sid" class="sid"></select>
+                </p><br />
+                <p>
+                    <span class="ptitle">机器人动作：</span>&nbsp;
+                    <select name="ai" class="ai"></select>
+                </p><br />
+                <p>
+                    <span class="ptitle">添加　方式：</span>&nbsp;
+                    <select id="select" name="select" class="select" onchange="A.showOrHidden()"></select>
+                    <input type="text" class="val" value="" size="20" />
+                </p><br />
+				<div id="showtype" style="display:none;">
+						<span class="ptitle" >svid　类型：</span>&nbsp;
+						<select name="svidtype" class="svidtype"> </select>
+						<font color="#FF0000">&nbsp;&nbsp;<b>*注意正确选择 svid 类型*</b></font> 
+						<br /><br />
+				</div>
+                <p>
+					<span class="ptitle">增加　数量：</span>&nbsp;
+					<label><input type="text" class="num" value="1" size="20" /></label> *输入增加的数量</p><br />
+                <p style="margin-top: 10px;display: block;"><label><input type="submit" name="add" onclick="A.add();" style="height:28px;" value="添加"></label></p>
+            </div>
+            <br>
+
+            <div style="border-bottom:1px dashed #000000;width: 500px;"></div>
+            <div id="del">
+                <h2>踢出机器人</h2><br>
+                <p>
+                    <span class="ptitle">选择平台：</span>&nbsp;
+                    <select name="sid" class="sid"></select>
+                </p><br />
+                <p>
+                    <span class="ptitle">踢出方式：</span>&nbsp;
+                    <select name="delselect" class="delselect"></select>
+                    <input type="text" class="delval" value="" size="20" />
+                </p><br />
+                <p style="margin-top: 10px;display: block;"><label><input type="submit" name="del" onclick="A.del()" style="height:28px;" value="踢出"></label></p>
+            </div>
+            <br>
+
+            <div style="border-bottom:1px dashed #000000;width: 500px;"></div>
+            <div id="other">
+                <h2>其他操作</h2><br>
+                <p><span class="ptitle">选择平台：</span>&nbsp;
+				                    <select name="sid" class="sid"></select>                
+				</p><br />
+                <p>
+                    <span class="ptitle">操作方式：</span>&nbsp;
+                    <select name="otherselect" class="otherselect"></select>
+                </p><br />
+                <p style="margin-top: 10px;display: block;"><label><input type="submit" name="other" onclick="A.other()" style="height:28px;" value="提交"></label></p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var url=location.port?location.hostname+":"+location.port:location.hostname;
+        var A = {
+            api: "http://"+url,
+            sidCfg : {
+                13:'FB繁体',
+                57:'FB泰语',
+                67:'FB印尼',
+                103:'FB土耳其',
+                117:'新浪微游戏',
+                108:'FB日语',
+                104:'FB法语',
+                110:'FB越南语',
+                124:'FB阿拉伯语',
+                144:'FB波兰语',
+                197:'classmate',
+                510:'阿里巴巴',
+                581:'slots繁体',
+            },
+            rebotAction : {
+                0:'正常打牌',
+                'always_allin':'一直allin',
+                'always_fold':'一直弃牌',
+                'always_call':'一直跟注',
+            },
+            addselect : {
+                'followuid':'用户mid',
+                'tid': '桌子tid',
+                'svid': '服务器svid'
+            },
+            delselect : {
+                'followuid':'用户mid',
+                'tid': '桌子tid',
+                'svid': '服务器svid',
+                'robotid': '机器人uid'
+            },
+            otherselect : {
+                'reset': '重置机器人',
+                'kick': '踢出全站机器人'
+            },
+            svidType : {
+                '0' : '非锦标赛(MTT)',
+                '1' : '锦标赛(MTT)',
+            },
+            init: function(){
+                $.each(A.sidCfg, function(i, v){
+                    $('.sid').append("<option value='"+ i +"'>"+ v +"</option>");
+                });
+                $.each(A.rebotAction, function(i, v){
+                    $('.ai').append("<option value='"+ i +"'>"+ v +"</option>");
+                });
+                $.each(A.addselect, function(i, v){
+                    $('.select').append("<option value='"+ i +"'>"+ v +"</option>");
+                });
+                $.each(A.delselect, function(i, v){
+                    $('.delselect').append("<option value='"+ i +"'>"+ v +"</option>");
+                });
+                $.each(A.otherselect, function(i, v){
+                    $('.otherselect').append("<option value='"+ i +"'>"+ v +"</option>");
+                });
+				$.each(A.svidType, function(i, v){
+                    $('.svidtype').append("<option value='"+ i +"'>"+ v +"</option>");
+                });
+                
+            },
+            ajax: function(url){
+                $.ajax({
+                    type: 'get',
+                    url: url,
+                    dataType: 'jsonp'
+                });
+            },
+            add: function(){
+                var sid = $('#add .sid').val();
+                var ai = $('#add .ai').val();
+                var select = $('#add .select').val();
+                var val = $('#add .val').val();
+                var num = $('#add .num').val();
+                var svidtype = $('#add .svidtype').val();
+                if(!sid || !select || !val || !num ||!svidtype){
+                    alert('输入错误');
+                    return false;
+                }
+                var url = A.api + "?platid="+ sid +"&"+ select +"="+ val+"&"+"svidtype="+svidtype+"&num="+ num;
+                if(ai != 0){
+                    url += "&ai="+ ai;
+                }
+                A.ajax(url);
+            },
+            del: function(){
+                var sid = $('#del .sid').val();
+                var delselect = $('#del .delselect').val();
+                var delval = $('#del .delval').val();
+                if(!sid || !delselect || !delval){
+                    alert('输入错误');
+                    return false;
+                }
+                var url = A.api + "?cmd=kick&platid="+ sid +"&"+ delselect +"="+ delval;
+                A.ajax(url);
+            },
+            other : function(){
+                var sid = $('#other .sid').val();
+                var otherselect = $('#other .otherselect').val();
+                if(!sid || !otherselect){
+                    alert('输入错误');
+                    return false;
+                }
+                var url = A.api + "?cmd="+ otherselect +"&platid="+ sid;
+                A.ajax(url);
+            },
+			showOrHidden : function(){
+				var select = document.getElementById('select');
+
+				var title = document.getElementById('showtype');
+				if( select.value == "svid" ){
+					title.style.display='block';
+                }
+				else{
+					$('#add .svidtype').val('0');
+					title.style.display='none';
+				}
+			}
+        }
+A.init();
+    </script>
+</body>
+</html>
