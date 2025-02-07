@@ -11,8 +11,8 @@ exports.mysql = function(){
 	return {
 		HOST:'127.0.0.1',
 		USER:'root',
-		PSWD:'123456',//如果连接失败，请检查这里
-		DB:'db_scmj',//如果连接失败，请检查这里
+		PSWD:'',//如果连接失败，请检查这里
+		DB:'nodejs',//如果连接失败，请检查这里
 		PORT:3306,
 	}
 }
@@ -65,5 +65,18 @@ exports.game_server = function(){
 		//暴露给客户端的接口
 		CLIENT_IP:HALL_IP,
 		CLIENT_PORT:10000,
+	};
+};
+
+
+//机器人服务配置
+exports.robot_server = function(){
+	return {
+		HALL_IP:HALL_IP,
+		ROBOT_PORT:9004,
+		FOR_ROOM_IP:LOCAL_IP,
+		ROOM_PORT:HALL_ROOM_PORT,
+		ACCOUNT_PRI_KEY:ACCOUNT_PRI_KEY,
+		ROOM_PRI_KEY:ROOM_PRI_KEY
 	};
 };

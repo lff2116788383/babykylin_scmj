@@ -749,11 +749,37 @@ exports.get_message = function(type,version,callback){
 };
 
 
+exports.create_robot = function(account,name,coins,gems,sex,headimg,callback){
+    callback = callback == null? nop:callback;
+    if(account == null || name == null || coins==null || gems==null){
+        callback(false);
+        return;
+    }
+    if(headimg){
+        headimg = '"' + headimg + '"';
+    }
+    else{
+        headimg = 'null';
+    }
+    name = crypto.toBase64(name);
+    var userId = generateUserId();
+    var type = 1;
+    var state = 0;
+    var sql = 'INSERT INTO t_users(userid,account,name,coins,gems,sex,headimg,type,state) VALUES("{0}", "{1}","{2}",{3},{4},{5},{6},{7},{8})';
+    sql = sql.format(userId,account,name,coins,gems,sex,headimg,type, state);
+    console.log(sql);
+    query(sql, function(err, rows, fields) {
+        if (err) {
+            throw err;
+        }
+        callback(true);
+    });
+};
 
 
 exports.get_all_robot_data = function(callback){
     callback = callback == null? nop:callback;
-    var sql = 'SELECT userid,account,name,lv,exp,coins,gems,roomid FROM t_users where type = "1"';
+    var sql = 'SELECT userid,account,name,lv,exp,coins,gems,roomid FROM t_users WHERE type = "'+ 1 + '"';
     query(sql, function(err, rows, fields) {
         if (err) {
             callback(null);
