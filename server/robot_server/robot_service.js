@@ -7,6 +7,7 @@ var app = express();
 var config = null;
 var robot_list= new Array();
 const path = require('path');
+var io = require('../node_modules/socket.io/node_modules/socket.io-client');
 
 //设置跨域访问
 app.all('*', function(req, res, next) {
@@ -18,6 +19,20 @@ app.all('*', function(req, res, next) {
   next();
 });
 
+//生成从minNum到maxNum的随机数
+function randomNum(minNum,maxNum){ 
+  switch(arguments.length){ 
+      case 1: 
+          return parseInt(Math.random()*minNum+1,10); 
+      break; 
+      case 2: 
+          return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
+      break; 
+          default: 
+              return 0; 
+          break; 
+  } 
+} 
 
 function generateRandomName() {
   // 复姓列表
@@ -96,12 +111,21 @@ app.get('/', function (req, res) {
 app.get('/process_get', function (req, res) {
 	 res.header("Content-Type", "application/json;charset=utf-8");
    // 输出 JSON 格式
-   var response = {
-       "first_name":req.query.first_name,
-       "last_name":req.query.last_name
-   };
-   console.log(response);
-   res.end(JSON.stringify(response));
+  //  var response = {
+  //      "first_name":req.query.first_name,
+  //      "last_name":req.query.last_name
+  //  };
+  //  console.log(response);
+  //  res.end(JSON.stringify(response));
+  
+   try_enter_private_room(req.query.first_name,req.query.last_name,function(ret) {
+    if(ret){
+      http.send(res,0,"success");
+      //进入房间成功再尝试登入游戏服
+    }else{
+      http.send(res,-1,"opertion fail!!");
+    }
+   });
 })
 
 //http://127.0.0.1:9004/add_game_robot?roomid=123&robot_num=456
@@ -179,7 +203,100 @@ function reigster_robot(reigster_num) {
   }
 };
 
+function try_enter_private_room(roomid,robot_num, callback){
+  for(var i =0;i<robot_num;i++){
+    var robot = robot_list[i];
+    robot_enter_private_room(roomid,robot,callback);
+  }
+}
 
+function robot_enter_private_room(roomid,robot,callback) {
+  var ip = "127.0.0.1";
+  var port = 9001;
+  var path="/enter_private_room";
+  
+  var reqdata = {
+    account: robot.account,
+    sign: "dcffce196d649eaa6c1108adde23f700",
+    roomid:roomid
+  };
+  //reqdata.sign = crypto.md5(userId + roomConf + data.gems + config.ROOM_PRI_KEY);
+  http.get(ip, port, path, reqdata, function (ret, data) {
+    console.log(data);
+    if (ret) {
+      if (data.errcode == 0) {
+        console.log("enter_private_room succ!!");
+        try_login_game(data,function (ret) {
+          if(ret){
+            callback(true);
+          }else{
+            callback(false);
+          }
+        });
+      }else {
+        console.log("enter_private_room fail!! errcode: " + data.errcode);
+        callback(false);
+      }
+    }else{
+      console.log("enter_private_room req failed!!");
+      callback(false);
+    }
+  });
+};
+
+function try_login_game(gamedata) {
+  var reqdata = {
+    roomid:gamedata.roomid,
+    token: gamedata.token,
+    time:gamedata.time,
+    sign:gamedata.sign
+  };
+  //客户端发送请求
+
+  var socket = io('http://'+gamedata.ip+':'+ gamedata.port+'/');
+  // 监听连接成功事件
+  socket.on('connect', () => {
+    console.log('已连接到服务端');
+
+    socket.emit('login',JSON.stringify(reqdata));
+
+    // 监听服务端发送的消息（假设服务端会发送 'message' 事件）
+    socket.on('login_result', (data) => {
+      //console.log('login_result:', data);
+      if(data.errcode!=0){
+        console.log('login game fail!!');
+      }
+    });
+
+    socket.on('login_finished', (data) => {
+      console.log('login_finished:');
+    });
+    //手牌
+    socket.on('game_holds_push', (data) => {
+      console.log('game_holds_push:');
+    });
+
+    //剩下的牌
+    socket.on('mj_count_push', (data) => {
+      console.log('mj_count_push:');
+    });
+    //
+    //定缺
+    socket.on('game_dingque_push', (data) => {
+      console.log('game_dingque_push:'+ data);
+
+      socket.emit('dingque',randomNum(0,2));
+    });
+    //出牌
+    socket.on('game_chupai_push', (data) => {
+      console.log('game_chupai_push:'+ data);
+    });
+    // 监听断开连接事件
+    socket.on('disconnect', () => {
+      console.log('与服务端断开连接');
+    });
+  });
+};
 
 exports.start = function($config){
   //reigster_robot(1);
@@ -193,3 +310,8 @@ exports.start = function($config){
     }
   });
 };
+
+//http://10.91.42.45:9000/guest?account=1738747743636
+//http://127.0.0.1:9001/login?account=guest_1738747743636&sign=5b26de053d29d6acaa7b78c826c2b74d
+
+//[http://127.0.0.1:9001/enter_private_room?account=guest_asdf1&sign=dcffce196d649eaa6c1108adde23f700&roomid=418433]
