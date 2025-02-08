@@ -14,7 +14,7 @@ app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
   res.header("X-Powered-By",' 3.2.1');
-	res.header("Content-Type", "application/json;charset=utf-8");
+	//res.header("Content-Type", "application/json;charset=utf-8");
   next();
 });
 
@@ -89,10 +89,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
  
 app.get('/', function (req, res) {
-   res.sendFile(__dirname + "/" + "index.html" );
+  res.header("Content-Type", "text/html;charset=utf-8");
+   res.sendFile(path.join(__dirname, 'index.html'));
 })
  
 app.get('/process_get', function (req, res) {
+	 res.header("Content-Type", "application/json;charset=utf-8");
    // 输出 JSON 格式
    var response = {
        "first_name":req.query.first_name,
@@ -127,6 +129,7 @@ function init_robot_list(callback) {
   db.get_all_robot_data(function(robots_data) {
     if(robots_data==null||robots_data.length<=0){
       callback(false);
+      return;
     }
     //初始化机器人列表 
     robot_list = robots_data;
